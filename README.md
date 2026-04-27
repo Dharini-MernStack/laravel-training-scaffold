@@ -8,6 +8,21 @@ This codebase is **intentionally incomplete**. Routes are stubs that throw 501 e
 
 Across 12 days, you'll fill in TODO comments aligned with each day's learning topic. By Day 12, this becomes a fully working Task & Project Management System.
 
+## ⚠️ A note on academic honesty
+
+This scaffold was adapted from an existing open-source Laravel project (see Credits at the bottom).
+That original repo has a complete, working implementation. **You can find it. Don't.**
+
+Here's why looking at it defeats the entire purpose of this program:
+
+- **The deliverable is not a working app.** The deliverable is YOU, ready to pass a recruiter's technical evaluation.
+  A copied app cannot answer "why did you choose this approach?" or "live-code a new endpoint right now."
+- **Mock Interview #1 (Day 6)** asks you to live-code an Eloquent relationship on the spot. You cannot fake this.
+- **Mock Interview #2 (Day 10)** asks you to add a new endpoint under time pressure and explain your choices. You cannot fake this.
+- **The technical evaluation with the actual recruiter** will be similar in format. If you can't pass our mocks, you won't pass theirs.
+
+We trust you. Stuck for 2+ hours? Ask in the cohort channel before going hunting. That's what it's there for.
+
 ## Day 1 setup
 
 ```bash
@@ -88,5 +103,10 @@ grep -rn "TODO Day" --include="*.php" --include="*.blade.php"
 - **`docs/day-XX.md` is mandatory** — this is your interview prep material.
 - **Don't push to the original scaffold** — you're working in YOUR fork.
 - **Stuck >45 min?** Ask in the cohort channel before going deeper.
+
+## Credits
+
+This scaffold was adapted from [Task-management-app---Laravel-10 by UmerFarooq966](https://github.com/UmerFarooq966/Task-management-app---Laravel-10),
+used here for educational purposes. Thanks to the original author.
 
 Good luck.
