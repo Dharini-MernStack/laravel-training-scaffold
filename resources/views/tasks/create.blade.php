@@ -1,47 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+    {{-- TODO Day 3: build the new-task form layout --}}
+    {{-- TODO Day 5: wire POST action and old() helper for repopulation --}}
+    {{-- TODO Day 7: add @error directives to display validation errors --}}
+    {{-- TODO Day 11: add file upload input (enctype="multipart/form-data") --}}
 
-                    <div class="card-body">
-                        <h2>Create Task</h2>
-
-                        <form method="post" action="{{ route('admin.tasks.store') }}">
-                            @csrf
-                            <div class="form-group">
-                                <label for="title">Title:</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Description:</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="status">Status:</label>
-                                <select class="form-control" id="status" name="status" required>
-                                    <option value="To Do">To Do</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="user_id">Assign to User:</label>
-                                <select class="form-control" id="user_id" name="user_id" required>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }} - - - {{$user->type}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <br>
-                            <button type="submit" class="btn btn-primary">Create Task</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold">New Task</h1>
+        <p class="text-gray-500 mt-4">TODO Day 3 — task create form goes here</p>
     </div>
 @endsection

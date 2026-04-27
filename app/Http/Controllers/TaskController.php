@@ -2,149 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Task;
-use App\Models\User;
-use App\Notifications\TaskAssigned;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-
-    public function index()
+    public function index(Project $project)
     {
-        // Display all tasks
-        $utype = auth()->user()->type;
-        if ($utype == 'admin' || $utype == 'manager') {
-            $tasks = Task::all();
-        } else {
-            $tasks = auth()->user()->tasks()->completed()->get();
-        }
-
-
-        return view('tasks.index', compact('tasks'));
+        // TODO Day 5: return view('tasks.index', ['tasks' => $project->tasks]);
+        // TODO Day 6: eager load — $project->load('tasks.comments', 'tasks.assignee');
+        abort(501, 'TODO Day 5 — implement task index');
     }
 
-    public function create()
+    public function create(Project $project)
     {
-        // Display form to create a new task
-        $users = User::all();
-        return view('tasks.create', compact('users'));
+        // TODO Day 5: return view('tasks.create', ['project' => $project]);
+        abort(501, 'TODO Day 5 — implement task create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Project $project)
     {
-        // Store a new task
-        $task = new Task;
-        $task->title = $request->input('title');
-        $task->description = $request->input('description');
-        $task->status = $request->input('status');
-        $task->user_id = $request->input('user_id');
-        $task->created_at = now();
-
-        $user = User::find($request->input('user_id')); // Retrieve the User model instance
-
-        if ($user) {
-            $task->save(); // Save the task first to get the ID
-            $user->notify(new TaskAssigned($task)); // Now generate the URL with the task ID
-        } else {
-            return redirect()->route('admin.tasks.index')->with('error', 'User not found.');
-        }
-
-        return redirect()->route('admin.tasks.index')->with('success', 'Task created successfully');
+        // TODO Day 5: $project->tasks()->create([...]);
+        // TODO Day 7: use StoreTaskRequest
+        // TODO Day 11: handle file upload — Storage::disk('public')->put(...)
+        abort(501, 'TODO Day 5 — implement task store');
     }
 
-
-    public function edit($id)
+    public function show(Task $task)
     {
-        // Display form to edit a task
-        $task = Task::findOrFail($id);
-        $users = User::all();
-        return view('tasks.edit', compact('task', 'users'));
+        // TODO Day 5: return view('tasks.show', ['task' => $task]);
+        abort(501, 'TODO Day 5 — implement task show');
     }
 
-    public function update(Request $request, $id)
+    public function edit(Task $task)
     {
-        // Update an existing task
-        $task = Task::findOrFail($id);
-        $task->title = $request->input('title');
-        $task->description = $request->input('description');
-        $task->status = $request->input('status');
-        $task->user_id = $request->input('user_id');
-        $task->save();
-
-        return redirect()->route('admin.tasks.index')->with('success', 'Task updated successfully');
+        // TODO Day 5: return view('tasks.edit', ['task' => $task]);
+        // TODO Day 9: $this->authorize('update', $task);
+        abort(501, 'TODO Day 5 — implement task edit');
     }
 
-    public function destroy($id)
+    public function update(Request $request, Task $task)
     {
-        // Delete a task
-        $task = Task::findOrFail($id);
-        $task->delete();
-
-        return redirect()->route('admin.tasks.index')->with('success', 'Task deleted successfully');
+        // TODO Day 5: $task->update([...]);
+        // TODO Day 7: use UpdateTaskRequest
+        // TODO Day 9: $this->authorize('update', $task);
+        // TODO Day 11: when assigned_to_id changes, dispatch TaskAssigned mail (queued)
+        abort(501, 'TODO Day 5 — implement task update');
     }
 
-    public function pendingTasks()
+    public function destroy(Task $task)
     {
-        $utype = auth()->user()->type;
-        if ($utype == 'admin' || $utype == 'manager') {
-            $tasks = Task::pending()->get();
-        } else {
-            $tasks = auth()->user()->tasks()->pending()->get();
-        }
-        return view('tasks.pending', compact('tasks'));
-    }
-
-    public function inProgressTasks()
-    {
-        $utype = auth()->user()->type;
-        if ($utype == 'admin' || $utype == 'manager') {
-            $tasks = Task::inProgress()->get();
-        } else {
-            $tasks = auth()->user()->tasks()->inProgress()->get();
-        }
-
-        return view('tasks.in-progress', compact('tasks'));
-    }
-
-    public function completedTasks()
-    {
-        $utype = auth()->user()->type;
-        if ($utype == 'admin' || $utype == 'manager') {
-            $tasks = Task::completed()->get();
-        } else {
-            $tasks = auth()->user()->tasks()->completed()->get();
-        }
-
-        return view('tasks.completed', compact('tasks'));
-    }
-
-    //updating tasks from user
-    public function updateStatus(Task $task, Request $request)
-    {
-        $request->validate([
-            'status' => 'required|in:To Do,In Progress,Completed',
-            'feedback' => 'nullable|string|max:255', // New validation rule for feedback
-        ]);
-
-        $task->status = $request->input('status');
-        $task->feedback = $request->input('feedback');
-        $task->save();
-
-        $redirectTo = $this->getRedirectRoute(Auth::user()->type);
-
-        return redirect()->route($redirectTo)->with('status', 'Task status updated successfully.');
-    }
-    private function getRedirectRoute($userType)
-    {
-        switch ($userType) {
-            case 'admin':
-                return 'admin.home';
-            case 'manager':
-                return 'manager.home';
-            default:
-                return 'home';
-        }
+        // TODO Day 5: $task->delete();
+        // TODO Day 9: $this->authorize('delete', $task);
+        abort(501, 'TODO Day 5 — implement task destroy');
     }
 }

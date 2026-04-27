@@ -8,27 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
-    // app/Models/Task.php
 
-    protected $fillable = ['title', 'description', 'status', 'feedback'];
+    // TODO Day 5: define $fillable — title, description, status, due_date, project_id, assigned_to_id
 
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-    public function scopePending($query)
-    {
-        return $query->where('status', 'To Do');
-    }
-
-    public function scopeInProgress($query)
-    {
-        return $query->where('status', 'In Progress');
-    }
-
-    public function scopeCompleted($query)
-    {
-        return $query->where('status', 'Completed');
-    }
+    // TODO Day 6: define relationships
+    //   - project()  → $this->belongsTo(Project::class)
+    //   - comments() → $this->hasMany(Comment::class)
+    //   - assignee() → $this->belongsTo(User::class, 'assigned_to_id')
 }
