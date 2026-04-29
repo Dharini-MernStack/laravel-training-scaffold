@@ -1,9 +1,9 @@
-# Day 1 Reflection
+# Day 1 Reflection 
 
 ## What I Did
-- Forked and cloned Laravel scaffold project
-- Installed dependencies using composer install
-- Switched PHP version to 8.3 for compatibility
+- Forked and cloned Laravel scaffold project 
+- Installed dependencies using composer install 
+- Switched PHP version to 8.3 for compatibility 
 - Configured .env file
 - Connected MySQL database
 - Ran migrations successfully
@@ -59,3 +59,4 @@
 5. Needed both servers running:
    - `php artisan serve`
    - `npm run dev`
+
