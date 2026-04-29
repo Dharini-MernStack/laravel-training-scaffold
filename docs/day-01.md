@@ -30,3 +30,7 @@
 * Laravel app running successfully on `http://localhost:8000`
 * Database connected and migrations working
 * Frontend assets compiled using Vite
+
+## 📸 Application Screenshot
+
+![Laravel App Screenshot](images/day1-output.png)
