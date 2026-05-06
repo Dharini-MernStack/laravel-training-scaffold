@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             // TODO Day 4: add columns
-            //   - title (string)
-            //   - description (text, nullable)
-            //   - status (string, default 'todo')
-            //   - due_date (date, nullable)
-            //   - project_id (foreignId, references projects.id, onDelete cascade)
-            //   - assigned_to_id (foreignId nullable, references users.id, onDelete set null)
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->string('status')->default('todo');
+            $table->date('due_date')->nullable();
+            $table->foreignId('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreignId('assigned_to_id')->nullable()->references('id')->on('users')->onDelete('set null');
             // TODO Day 11: add 'attachment_path' column (string, nullable) for file uploads
             $table->timestamps();
         });
