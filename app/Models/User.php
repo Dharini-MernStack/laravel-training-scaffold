@@ -15,6 +15,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
         // TODO Day 9: add 'role' here once you create the migration
     ];
 
@@ -25,10 +26,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // TODO Day 6: define relationships
-    //   - projects()      → $this->belongsToMany(Project::class, 'project_user')
-    //   - ownedProjects() → $this->hasMany(Project::class)
-    //   - assignedTasks() → $this->hasMany(Task::class, 'assigned_to_id')
+    
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+    public function ownedProjects()
+    {
+        return $this->hasMany(Project::class);
+    }
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to_id');
+    }
 
     // TODO Day 10: add HasApiTokens trait (after installing Sanctum)
     //   use Laravel\Sanctum\HasApiTokens;
