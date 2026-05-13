@@ -2,59 +2,190 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+
+
+use App\Models\User;
+use App\services\BrevoMailService;
+
 
 class TaskController extends Controller
 {
+    
     public function index(Project $project)
-    {
-        // TODO Day 5: return view('tasks.index', ['tasks' => $project->tasks]);
-        // TODO Day 6: eager load — $project->load('tasks.comments', 'tasks.assignee');
-        abort(501, 'TODO Day 5 — implement task index');
-    }
+{
+    $tasks = $project->tasks;
+
+    return view('tasks.index', [
+        'tasks' => $tasks,
+        'project' => $project
+    ]);
+}
+
 
     public function create(Project $project)
     {
-        // TODO Day 5: return view('tasks.create', ['project' => $project]);
-        abort(501, 'TODO Day 5 — implement task create');
+        $users = User::all();
+        return view('tasks.create', ['project'=> $project,'users'=>$users]);
+        
     }
 
-    public function store(Request $request, Project $project)
+    public function store(StoreTaskRequest $request, Project $project)
     {
-        // TODO Day 5: $project->tasks()->create([...]);
-        // TODO Day 7: use StoreTaskRequest
-        // TODO Day 11: handle file upload — Storage::disk('public')->put(...)
-        abort(501, 'TODO Day 5 — implement task store');
+        $path = null;
+
+        if ($request->hasFile('attachment')) {
+            $path = $request->file('attachment')->store('attachments', 'public');
+        }
+
+        $task = Task::create([
+    'title' => $request->title,
+    'description' => $request->description,
+    'status' => $request->status,
+    'project_id' => $project->id,
+    'assigned_to_id' => $request->assigned_to_id,
+    'attachment_path' => $path
+]);
+
+$task->load('assignee');
+
+if ($task->assignee) {
+
+    BrevoMailService::send(
+        $task->assignee->email,
+        $task->assignee->name,
+        'New Task Assigned',
+        "
+        <h1>Task Assigned</h1>
+
+        <p>You have been assigned a new task.</p>
+
+        <p><strong>Title:</strong> {$task->title}</p>
+
+        <p><strong>Description:</strong> {$task->description}</p>
+
+        <p><strong>Status:</strong> {$task->status}</p>
+        "
+    );
+}
+
+BrevoMailService::send(
+    auth()->user()->email,
+    auth()->user()->name,
+    'Task Created Successfully',
+    "
+    <h1>Task Created</h1>
+
+    <p>Your task was created successfully.</p>
+
+    <p><strong>Title:</strong> {$task->title}</p>
+    "
+);
+
+    return redirect("/projects/{$project->id}/tasks");
     }
 
-    public function show(Task $task)
+    public function show(Project $project,Task $task)
     {
-        // TODO Day 5: return view('tasks.show', ['task' => $task]);
-        abort(501, 'TODO Day 5 — implement task show');
+        
+        $task->load('comments', 'assignee');
+        
+
+        return view('tasks.show', ['task'=> $task,'project'=>$project]);
     }
 
-    public function edit(Task $task)
+    public function edit(Project $project, Task $task)
     {
-        // TODO Day 5: return view('tasks.edit', ['task' => $task]);
-        // TODO Day 9: $this->authorize('update', $task);
-        abort(501, 'TODO Day 5 — implement task edit');
+        
+        $this->authorize('update', $task);
+       $users = User::all();
+
+        return view('tasks.edit',['task'=>$task,'project'=>$project,'users'=>$users]);
     }
 
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request ,Project $project, Task $task )
     {
-        // TODO Day 5: $task->update([...]);
-        // TODO Day 7: use UpdateTaskRequest
-        // TODO Day 9: $this->authorize('update', $task);
-        // TODO Day 11: when assigned_to_id changes, dispatch TaskAssigned mail (queued)
-        abort(501, 'TODO Day 5 — implement task update');
+       
+        
+
+        $this->authorize('update', $task);
+
+        $oldAssignedTo = $task->assigned_to_id;
+
+        $task->update([
+            'title'=>$request->title,
+            'description'=>$request->description,
+            'status'=>$request->status,
+            'assigned_to_id' => $request->assigned_to_id
+        ]);
+
+         $task->load('assignee');
+
+        
+
+    // Mail::to($task->assignee->email)
+    //     ->send(new TaskAssigned($task));
+        
+        if ($task->assignee) {
+
+    BrevoMailService::send(
+        $task->assignee->email,
+        $task->assignee->name,
+        'Task Updated',
+        "
+        <h1>Task Updated</h1>
+
+        <p>Your assigned task has been updated.</p>
+
+        <p><strong>Title:</strong> {$task->title}</p>
+
+        <p><strong>Description:</strong> {$task->description}</p>
+
+        <p><strong>Status:</strong> {$task->status}</p>
+        "
+    );
+}
+
+BrevoMailService::send(
+    auth()->user()->email,
+    auth()->user()->name,
+    'Task Updated Successfully',
+    "
+    <h1>Task Updated</h1>
+
+    <p>The task was updated successfully.</p>
+
+    <p><strong>Title:</strong> {$task->title}</p>
+    "
+);
+
+
+        return redirect("/projects/{$project->id}/tasks");
     }
 
-    public function destroy(Task $task)
+    public function destroy(Project $project,Task $task)
     {
-        // TODO Day 5: $task->delete();
-        // TODO Day 9: $this->authorize('delete', $task);
-        abort(501, 'TODO Day 5 — implement task destroy');
+        $this->authorize('delete', $task);
+        if ($task->attachment_path) {
+            Storage::disk('public')->delete($task->attachment_path);
+        }
+        $task->delete();
+        return redirect("/projects/{$project->id}/tasks");
+    
+        
+    }
+
+    public function completedTasks()
+    {
+        $tasks = Task::where('status','done')
+        ->with('project:id,name')->get();
+
+        return view('tasks.completed-tasks',compact('tasks'));
     }
 }

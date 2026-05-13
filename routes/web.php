@@ -1,6 +1,68 @@
 <?php
 
+use App\Models\Task;
+use App\Mail\TaskAssigned;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
+/*
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('dashboard');
+});
+
+Route::get('/mail-driver', function () {
+    return config('mail.default');
+});
+
+Route::get('/test-mail', function () {
+
+    Mail::raw('<h1>Resend working bro!</h1>', function ($message) {
+
+        $message->to('balajier2006@gmail.com')
+                ->subject('Laravel Resend Test');
+
+    });
+
+    return 'Mail Sent!';
+});
+
+
+Route::get('/admin', function () {
+    return 'Admin Dashboard';
+})->middleware(['auth', 'role:admin']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/completed-tasks', [TaskController::class, 'completedTasks'])->name('completed-tasks');
+    Route::resource('projects', ProjectController::class);
+    Route::resource('projects.tasks', TaskController::class);
+});
+
+Route::get('/dashboard', function () {
+    return 'dashboard working';
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -10,11 +72,8 @@ use Illuminate\Support\Facades\Route;
 | Search the codebase for "TODO Day X" to find your daily tasks.
 */
 
-Route::get('/', function () {
-    return view('home');
-});
 
-// TODO Day 2: define resource routes for projects and tasks
+
 //   - GET    /projects                      (index)
 //   - GET    /projects/create               (create form)
 //   - POST   /projects                      (store)
@@ -26,11 +85,12 @@ Route::get('/', function () {
 // Hint: Route::resource('projects', ProjectController::class);
 // Wrap them in auth middleware (after Day 8): Route::middleware('auth')->group(function () { ... });
 
-// TODO Day 8: install Breeze, then Breeze will add its own auth routes here
+
+
+
 // Run: composer require laravel/breeze --dev
 //      php artisan breeze:install blade
 //      npm install && npm run dev
 //      php artisan migrate
 
-// TODO Day 9: protect admin-only routes with the CheckRole middleware
 // Example: Route::middleware(['auth', 'role:admin'])->group(function () { ... });

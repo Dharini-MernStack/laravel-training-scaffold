@@ -57,7 +57,7 @@ If localhost:8000 loads, your Day 1 deliverable is done.
 Each day has tagged TODOs throughout the codebase. To see your tasks for the day:
 
 ```bash
-grep -rn "TODO Day 5"   # for Day 5
+
 grep -rn "TODO Day 6"   # for Day 6
 # etc.
 ```
@@ -67,6 +67,9 @@ You can also see ALL TODOs at once:
 ```bash
 grep -rn "TODO Day" --include="*.php" --include="*.blade.php"
 ```
+
+1. Ensure you have your personal GitHub fork ready.
+
 
 ## Daily workflow
 
@@ -110,3 +113,265 @@ This scaffold was adapted from [Task-management-app---Laravel-10 by UmerFarooq96
 used here for educational purposes. Thanks to the original author.
 
 Good luck.
+
+
+# Laravel Task Management System
+
+A full-stack Laravel-based Task Management System built during a 12-day backend engineering training program.  
+This application supports authentication, authorization, task management, REST APIs, file uploads, queued emails, feature testing, and production deployment.
+
+---
+
+# Live Demo
+
+https://laravel-training-scaffold.onrender.com/
+
+---
+
+# Features
+
+- User Authentication
+- Authorization Policies
+- Project CRUD Operations
+- Task CRUD Operations
+- Task Assignment
+- Queued Email Notifications
+- File Upload Support
+- REST API Endpoints
+- Sanctum Authentication
+- Feature Testing
+- PostgreSQL Production Database
+- Docker Deployment
+- Production Deployment on Render
+
+---
+
+# Tech Stack
+
+- Laravel 12
+- PHP 8.2
+- PostgreSQL
+- Laravel Sanctum
+- Blade Templates
+- Tailwind CSS
+- Vite
+- Docker
+- Render
+- Mailtrap
+- PHPUnit
+
+---
+
+# Screenshots
+
+## Home Page
+
+![Home](docs/images/Home.png)
+## Login Page
+![Login](docs/images/login.png)
+## Projects Page
+![Projects](./docs/images/projects.png)
+## Tasks Page
+![Tasks](./docs/images/tasks.png)
+
+## ER Diagram
+
+
+![ER Diagram](./docs/images/er-diagram.png)
+
+## Authentication
+
+This project uses Laravel Authentication with:
+
+* Registration
+* Login
+* Logout
+* Session Authentication
+* Sanctum Token Authentication
+
+## Authorization
+
+Authorization is implemented using Laravel Policies.
+
+Example:
+
+* Only project owners can update/delete projects
+* Only authorized users can manage tasks
+
+## API Endpoints
+
+* Authentication
+POST /api/login
+* Projects API
+GET /api/projects
+* Tasks API
+GET /api/tasks
+
+## File Uploads
+
+* Users can upload attachments while creating tasks.
+* Uploaded files are stored using Laravel Storage.
+
+## Queued Emails
+
+* Task assignment emails are queued using Laravel Queues.
+
+Example:
+
+* When a task is assigned to a user
+* Email notification gets queued and processed
+
+## Database Relationships
+
+Relationships implemented:
+
+* User hasMany Projects
+* Project hasMany Tasks
+* Task belongsTo User
+* Task belongsTo Project
+
+## Testing
+
+Feature tests implemented for:
+
+* CRUD operations
+* Authentication
+* Authorization
+* API testing
+* Eloquent relationships
+
+## Test Output
+
+PASS  Tests\\Unit\\ExampleTest
+
+PASS  Tests\\Feature\\ApiAuthTest
+✓ user can login and receive a token
+✓ authenticated request returns user projects
+
+PASS  Tests\\Feature\\AuthorizationTest
+✓ guest is redirected to login
+✓ admin can access admin routes
+
+PASS  Tests\\Feature\\ProjectCrudTest
+✓ authenticated user can view projects
+✓ authenticated user can create project
+✓ unauthorized users cannot update projects
+
+PASS  Tests\\Feature\\RelationshipTest
+✓ project has many tasks
+✓ user belongs to many projects
+
+Tests: 33 passed
+Deployment
+
+The application is deployed publicly using:
+
+* Docker
+* Render
+* PostgreSQL
+
+### Local Setup Instructions
+
+Clone Repository
+```
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+```
+Move into Project
+```
+cd YOUR_REPO
+```
+Install PHP Dependencies
+```
+composer install
+```
+Install Node Dependencies
+```
+npm install
+```
+Configure Environment
+```
+cp .env.example .env
+```
+Generate Application Key
+```
+php artisan key:generate
+```
+Configure Database
+```
+Update .env with database credentials.
+```
+Run Migrations
+```
+php artisan migrate
+Run Vite
+npm run dev
+Start Laravel Server
+php artisan serve
+```
+**Environment Variables Used**
+```
+APP_NAME=
+APP_ENV=
+APP_KEY=
+APP_DEBUG=
+
+DB_CONNECTION=
+DB_HOST=
+DB_PORT=
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+
+MAIL_MAILER=
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=
+
+QUEUE_CONNECTION=
+```
+
+### Project Structure
+
+```
+app/
+routes/
+resources/
+tests/
+database/
+public/
+
+```
+### Concepts Learned
+
+* Laravel MVC Architecture
+* REST APIs
+* Authentication
+* Authorization
+* Policies
+* Middleware
+* Eloquent Relationships
+* Queues
+* Mailables
+* File Uploads
+* Feature Testing
+* Docker Deployment
+* Production Debugging
+* PostgreSQL Integration
+
+### Version
+
+v1.0
+
+### GitHub Release Tag
+git tag v1.0
+git push origin v1.0
+
+### Future Improvements
+* Real-time notifications
+* Role-based dashboards
+* Activity logging
+* Search and filters
+* WebSockets
+* Admin analytics
